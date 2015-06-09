@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <RelativeLayout
+            android:layout_height="180dp"
+            android:layout_width="fill_parent">
+        <EditText
+                android:id="@+id/singleBudgetPriceText"
+                android:inputType="numberDecimal"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_height="wrap_content"
+                android:layout_width="50dp"/>
+        <DatePicker
+                android:id="@+id/singleBudgetDateText"
+                android:layout_alignLeft="@+id/singleBudgetPriceText"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="200dp"
+                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                />
+        <EditText
+                android:id="@+id/singleBudgetDescriptionText"
+                android:inputType="text"
+                android:layout_alignTop="@+id/singleBudgetPriceText"
+                android:layout_marginTop="45dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:layout_width="150dp"/>
+        <Button
+                android:id="@+id/singleBudgetSaveButton"
+                android:layout_alignLeft="@+id/singleBudgetDateText"
+                android:layout_marginTop="75dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:onClick="save"
+                android:text="Save"/>
+    </RelativeLayout>
+    <ListView
+            android:id="@+id/singleBudgetTransactions"
+            android:layout_width="match_parent"
+            android:layout_height="600dp"/>
+</LinearLayout>
