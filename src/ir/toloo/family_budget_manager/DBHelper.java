@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DBName = "budget_acc";
 
     public DBHelper(Context context) {
-        super(context, DBName, null, 6);
+        super(context, DBName, null, 7);
     }
 
     @Override
@@ -91,29 +92,59 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<Transaction> getTransactions(int budgetId) {
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select id, date, value, budgetId, itemId, description from transactions order by id desc", null);
+        Cursor cursor = db.rawQuery("select t.id, t.date, t.value, t.budgetId, t.itemId, t.description, i.name " +
+                "from transactions as t join items as i on t.itemId = i.id " +
+                "where t.budgetId = ? order by t.id desc", new String[] {String.valueOf(budgetId)});
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             Transaction transaction = new Transaction(cursor.getInt(0), cursor.getFloat(1),
-                    cursor.getFloat(2), cursor.getInt(3), cursor.getInt(4), cursor.getString(5));
+                    cursor.getFloat(2), cursor.getInt(3), cursor.getInt(4), cursor.getString(6),
+                    cursor.getString(5));
             transactions.add(transaction);
             cursor.moveToNext();
         }
         return transactions;
     }
 
-    public void saveTransaction(Date date, float price, Integer budgetId, int itemId, String description) {
+    public void saveTransaction(String date, float price, Integer budgetId, String item, String description) {
         SQLiteDatabase db = this.getWritableDatabase();
+        long itemId = this.getItemId(db, item);
         ContentValues transactionValues = new ContentValues();
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        String formatted_date = dateFormat.format(date);
-        transactionValues.put("date", "2015-01-01");
+        transactionValues.put("date", date);
         transactionValues.put("value", price);
         transactionValues.put("budgetId", budgetId);
         transactionValues.put("itemId", itemId);
         transactionValues.put("description", description);
         long result = db.insert("transactions", null, transactionValues);
-        result += 1;
+        if (result < 0)
+            result = 0;
+    }
+
+    private long getItemId(SQLiteDatabase db, String name) {
+        Cursor itemCursor = db.rawQuery("select id from items where name like ?", new String[] {name});
+        if (itemCursor.isAfterLast()) {
+            ContentValues itemValues = new ContentValues();
+            itemValues.put("name", name);
+            return db.insert("items", null, itemValues);
+        }
+        itemCursor.moveToFirst();
+        return itemCursor.getLong(0);
+    }
+
+    public ArrayList<String> getItems(int budgetId) {
+        ArrayList<String> items = new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select name from items", null);
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            items.add(cursor.getString(0));
+            cursor.moveToNext();
+        }
+        return items;
+    }
+
+    public void removeTransaction(int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("transactions", "id=?", new String[] {String.valueOf(id)});
     }
 }

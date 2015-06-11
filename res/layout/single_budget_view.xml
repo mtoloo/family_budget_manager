@@ -8,35 +8,68 @@
     <RelativeLayout
             android:layout_height="180dp"
             android:layout_width="fill_parent">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:layout_alignParentLeft="true"
+                  android:layout_marginTop="15dp"
+                  android:id="@+id/singleBudgetPriceLabel"
+                  android:text="Price"/>
         <EditText
                 android:id="@+id/singleBudgetPriceText"
+                android:layout_alignLeft="@+id/singleBudgetPriceLabel"
                 android:inputType="numberDecimal"
-                android:layout_alignParentLeft="true"
                 android:layout_marginTop="5dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="35dp"
                 android:layout_height="wrap_content"
                 android:layout_width="50dp"/>
-        <DatePicker
-                android:id="@+id/singleBudgetDateText"
-                android:layout_alignLeft="@+id/singleBudgetPriceText"
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:layout_alignParentLeft="true"
+                  android:layout_marginTop="15dp"
+                  android:layout_marginLeft="150dp"
+                  android:id="@+id/singleBudgetItemLabel"
+                  android:text="Item"/>
+        <AutoCompleteTextView
+                android:id="@+id/singleBudgetItemText"
+                android:layout_alignLeft="@+id/singleBudgetItemLabel"
                 android:layout_marginTop="5dp"
-                android:layout_marginLeft="200dp"
+                android:layout_marginLeft="35dp"
                 android:layout_height="wrap_content"
-                android:layout_width="80dp"
-                />
+                android:layout_width="100dp"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:layout_alignTop="@+id/singleBudgetPriceText"
+                  android:layout_marginTop="60dp"
+                  android:id="@+id/singleBudgetDescriptionLabel"
+                  android:text="Description"/>
         <EditText
                 android:id="@+id/singleBudgetDescriptionText"
                 android:inputType="text"
-                android:layout_alignTop="@+id/singleBudgetPriceText"
-                android:layout_marginTop="45dp"
-                android:layout_marginLeft="5dp"
+                android:layout_alignLeft="@+id/singleBudgetDescriptionLabel"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="70dp"
                 android:layout_height="wrap_content"
-                android:layout_width="150dp"/>
+                android:layout_width="200dp"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:layout_alignTop="@+id/singleBudgetPriceText"
+                  android:layout_marginTop="100dp"
+                  android:id="@+id/singleBudgetDateLabel"
+                  android:text="Date"/>
+        <EditText
+                android:id="@+id/singleBudgetDateText"
+                android:inputType="datetime"
+                android:layout_alignLeft="@+id/singleBudgetDateLabel"
+                android:layout_marginTop="100dp"
+                android:layout_marginLeft="40dp"
+                android:layout_height="wrap_content"
+                android:layout_width="200dp"
+                />
         <Button
                 android:id="@+id/singleBudgetSaveButton"
-                android:layout_alignLeft="@+id/singleBudgetDateText"
-                android:layout_marginTop="75dp"
-                android:layout_marginLeft="5dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="100dp"
+                android:layout_marginRight="10dp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:onClick="save"

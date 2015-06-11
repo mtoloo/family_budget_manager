@@ -13,19 +13,28 @@ public class Transaction {
     private final float value;
     private final int budgetId;
     private final int itemId;
+    private final String itemName;
     private final String description;
 
-    public Transaction(int id, float date, float value, int budgetId, int itemId, String description) {
+    public Transaction(int id, float date, float value, int budgetId, int itemId, String itemName, String description) {
         this.id = id;
         this.date = date;
         this.value = value;
         this.budgetId = budgetId;
         this.itemId = itemId;
+        this.itemName = itemName;
         this.description = description;
     }
 
     @Override
     public String toString() {
-        return description;
+        String result = itemName;
+        if (!description.isEmpty())
+            result += "(" + description + ")";
+        return result;
+    }
+
+    public int getId() {
+        return id;
     }
 }
