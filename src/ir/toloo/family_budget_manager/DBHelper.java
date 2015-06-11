@@ -24,7 +24,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DBName = "budget_acc";
 
     public DBHelper(Context context) {
-        super(context, DBName, null, 7);
+        super(context, DBName, null, 10);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "name text)");
         db.execSQL("Create table transactions " +
                 "(id integer primary key," +
-                "date date," +
+                "date long," +
                 "value float," +
                 "budgetId integer," +
                 "itemId integer," +
@@ -93,20 +93,19 @@ public class DBHelper extends SQLiteOpenHelper {
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select t.id, t.date, t.value, t.budgetId, t.itemId, t.description, i.name " +
-                "from transactions as t join items as i on t.itemId = i.id " +
+                "from transactions as t left join items as i on t.itemId = i.id " +
                 "where t.budgetId = ? order by t.id desc", new String[] {String.valueOf(budgetId)});
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            Transaction transaction = new Transaction(cursor.getInt(0), cursor.getFloat(1),
+            Transaction transaction = new Transaction(cursor.getInt(0), cursor.getLong(1),
                     cursor.getFloat(2), cursor.getInt(3), cursor.getInt(4), cursor.getString(6),
                     cursor.getString(5));
             transactions.add(transaction);
-            cursor.moveToNext();
         }
         return transactions;
     }
 
-    public void saveTransaction(String date, float price, Integer budgetId, String item, String description) {
+    public void saveTransaction(long date, float price, Integer budgetId, String item, String description) {
         SQLiteDatabase db = this.getWritableDatabase();
         long itemId = this.getItemId(db, item);
         ContentValues transactionValues = new ContentValues();

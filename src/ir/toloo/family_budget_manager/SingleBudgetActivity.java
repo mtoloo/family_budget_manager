@@ -3,9 +3,12 @@ package ir.toloo.family_budget_manager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.*;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +22,7 @@ import java.util.Locale;
  * To change this template use File | Settings | File Templates.
  */
 public class SingleBudgetActivity extends Activity{
+    public static final String DATE_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private DBHelper db;
     private int budgetId;
 
@@ -31,7 +35,7 @@ public class SingleBudgetActivity extends Activity{
         budgetId = intent.getExtras().getInt("id");
         EditText dateText = (EditText) findViewById(R.id.singleBudgetDateText);
         SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                DATE_STRING_FORMAT, Locale.getDefault());
         String formatted_date = dateFormat.format(new Date());
         dateText.setText(formatted_date);
         showTransactions(budgetId);
@@ -67,7 +71,6 @@ public class SingleBudgetActivity extends Activity{
                 Transaction transaction = transactions.get(position);
                 db.removeTransaction(transaction.getId());
                 showTransactions(budgetId);
-//                transactions.remove(position);
                 return false;
             }
         });
@@ -79,7 +82,16 @@ public class SingleBudgetActivity extends Activity{
         EditText itemText = (EditText) findViewById(R.id.singleBudgetItemText);
         EditText dateText = (EditText) findViewById(R.id.singleBudgetDateText);
         EditText descriptionText = (EditText) findViewById(R.id.singleBudgetDescriptionText);
-        this.db.saveTransaction(dateText.getText().toString(),
+        String dateStr = dateText.getText().toString();
+        long date_milis;
+        try {
+            Date date = new SimpleDateFormat(DATE_STRING_FORMAT, Locale.ENGLISH).parse(dateStr);
+            date_milis = date.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date_milis = System.currentTimeMillis();
+        }
+        this.db.saveTransaction(date_milis,
                 Float.parseFloat(priceText.getText().toString()),
                 budgetId, itemText.getText().toString(),
                 descriptionText.getText().toString());
