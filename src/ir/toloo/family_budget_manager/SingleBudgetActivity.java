@@ -3,8 +3,6 @@ package ir.toloo.family_budget_manager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.*;
 
@@ -25,6 +23,11 @@ public class SingleBudgetActivity extends Activity{
     public static final String DATE_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private DBHelper db;
     private int budgetId;
+    private EditText dateText;
+    private AutoCompleteTextView itemText;
+    private TextView priceText;
+    private TextView descriptionText;
+    private EditText idText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +36,8 @@ public class SingleBudgetActivity extends Activity{
         this.db = new DBHelper(this);
         Intent intent = getIntent();
         budgetId = intent.getExtras().getInt("id");
-        EditText dateText = (EditText) findViewById(R.id.singleBudgetDateText);
+        idText = (EditText) findViewById(R.id.singleBudgetIdText);
+        dateText = (EditText) findViewById(R.id.singleBudgetDateText);
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 DATE_STRING_FORMAT, Locale.getDefault());
         String formatted_date = dateFormat.format(new Date());
@@ -42,16 +46,18 @@ public class SingleBudgetActivity extends Activity{
         ArrayList<String> itemsArrayList = db.getItems(budgetId);
         ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,
                 itemsArrayList);
-        final AutoCompleteTextView itemTextView = (AutoCompleteTextView) findViewById(R.id.singleBudgetItemText);
-        itemTextView.setAdapter(itemsAdapter);
-        itemTextView.setOnClickListener(new View.OnClickListener()
-        {
+        itemText = (AutoCompleteTextView) findViewById(R.id.singleBudgetItemText);
+        itemText.setAdapter(itemsAdapter);
+        itemText.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                itemTextView.showDropDown();
+                itemText.showDropDown();
             }
         });
+
+        priceText = (TextView) findViewById(R.id.singleBudgetPriceText);
+        descriptionText = (TextView) findViewById(R.id.singleBudgetDescriptionText);
     }
 
     private void showTransactions(final int budgetId) {
@@ -59,10 +65,16 @@ public class SingleBudgetActivity extends Activity{
         ArrayAdapter<Transaction> transactionArrayAdapter = new ArrayAdapter<Transaction>(this, android.R.layout.simple_list_item_1, transactions);
         ListView transactionListView = (ListView) findViewById(R.id.singleBudgetTransactions);
         transactionListView.setAdapter(transactionArrayAdapter);
+        final SingleBudgetActivity singleBudget = this;
         transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Transaction transaction = transactions.get(position);
+                singleBudget.idText.setText(String.valueOf(transaction.getId()));
+                singleBudget.budgetId = transaction.getBudgetId();
+                singleBudget.itemText.setText(transaction.itemName);
+                singleBudget.priceText.setText(String.valueOf(transaction.value));
+                singleBudget.descriptionText.setText(String.valueOf(transaction.description));
             }
         });
         transactionListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -77,11 +89,6 @@ public class SingleBudgetActivity extends Activity{
     }
 
     public void save(View view) {
-        Bundle extras = getIntent().getExtras();
-        EditText priceText = (EditText) findViewById(R.id.singleBudgetPriceText);
-        EditText itemText = (EditText) findViewById(R.id.singleBudgetItemText);
-        EditText dateText = (EditText) findViewById(R.id.singleBudgetDateText);
-        EditText descriptionText = (EditText) findViewById(R.id.singleBudgetDescriptionText);
         String dateStr = dateText.getText().toString();
         long date_milis;
         try {
@@ -91,10 +98,17 @@ public class SingleBudgetActivity extends Activity{
             e.printStackTrace();
             date_milis = System.currentTimeMillis();
         }
-        this.db.saveTransaction(date_milis,
+        long id = 0;
+        if (!idText.getText().toString().equals(""))
+            id = Long.parseLong(idText.getText().toString());
+
+        this.db.saveTransaction(
+                id,
+                date_milis,
                 Float.parseFloat(priceText.getText().toString()),
                 budgetId, itemText.getText().toString(),
                 descriptionText.getText().toString());
+
         this.showTransactions(budgetId);
     }
 }

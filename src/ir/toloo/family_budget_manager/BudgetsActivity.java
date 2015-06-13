@@ -21,7 +21,7 @@ public class BudgetsActivity extends Activity {
         this.db = new DBHelper(this);
 
         GridView gridView = (GridView) findViewById(R.id.gridView);
-        gridView.setAdapter(new ImageAdapter(this, db));
+        gridView.setAdapter(new BudgetAdapter(this, db));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {

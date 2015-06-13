@@ -21,13 +21,11 @@ import java.util.Map;
  * Time: 1:37 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ImageAdapter extends BaseAdapter {
-    private final DBHelper db;
+public class BudgetAdapter extends BaseAdapter {
     private final ArrayList<Budget> budgets;
     private Context mContext;
-    public ImageAdapter(Context c, DBHelper db) {
+    public BudgetAdapter(Context c, DBHelper db) {
         this.mContext = c;
-        this.db = db;
         this.budgets = db.getAllBudgets();
     }
 
@@ -85,12 +83,4 @@ public class ImageAdapter extends BaseAdapter {
             result = R.drawable.save;
         return result;
     }
-
-    // Keep all Images in array
-//    public Integer[] mThumbIds = {
-//            R.drawable.consumable, R.drawable.home,
-//            R.drawable.car, R.drawable.save,
-//            R.drawable.man, R.drawable.woman,
-//            R.drawable.child
-//    };
 }

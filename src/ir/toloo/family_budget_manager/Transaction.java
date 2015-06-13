@@ -1,9 +1,6 @@
 package ir.toloo.family_budget_manager;
 
-import android.text.format.DateFormat;
 import android.text.format.DateUtils;
-
-import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,15 +10,15 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class Transaction {
-    private final int id;
+    private final long id;
     private final long date;
-    private final float value;
+    public final float value;
     private final int budgetId;
     private final int itemId;
-    private final String itemName;
-    private final String description;
+    public final String itemName;
+    public final String description;
 
-    public Transaction(int id, long date, float value, int budgetId, int itemId, String itemName, String description) {
+    public Transaction(long id, long date, float value, int budgetId, int itemId, String itemName, String description) {
         this.id = id;
         this.date = date;
         this.value = value;
@@ -42,7 +39,11 @@ public class Transaction {
         return result;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
+    }
+
+    public int getBudgetId() {
+        return budgetId;
     }
 }

@@ -5,12 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created with IntelliJ IDEA.
@@ -105,7 +101,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return transactions;
     }
 
-    public void saveTransaction(long date, float price, Integer budgetId, String item, String description) {
+    public long saveTransaction(long id, long date, float price, Integer budgetId, String item, String description) {
         SQLiteDatabase db = this.getWritableDatabase();
         long itemId = this.getItemId(db, item);
         ContentValues transactionValues = new ContentValues();
@@ -114,9 +110,12 @@ public class DBHelper extends SQLiteOpenHelper {
         transactionValues.put("budgetId", budgetId);
         transactionValues.put("itemId", itemId);
         transactionValues.put("description", description);
-        long result = db.insert("transactions", null, transactionValues);
-        if (result < 0)
-            result = 0;
+        long result;
+        if (id > 0)
+            result = db.update("transactions", transactionValues, "id=?", new String[] {String.valueOf(id)});
+        else
+            result = db.insert("transactions", null, transactionValues);
+        return result;
     }
 
     private long getItemId(SQLiteDatabase db, String name) {
@@ -142,7 +141,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return items;
     }
 
-    public void removeTransaction(int id){
+    public void removeTransaction(long id){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete("transactions", "id=?", new String[] {String.valueOf(id)});
     }
