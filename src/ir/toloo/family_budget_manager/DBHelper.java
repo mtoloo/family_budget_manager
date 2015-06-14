@@ -5,7 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -88,9 +93,17 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<Transaction> getTransactions(int budgetId) {
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select t.id, t.date, t.value, t.budgetId, t.itemId, t.description, i.name " +
-                "from transactions as t left join items as i on t.itemId = i.id " +
-                "where t.budgetId = ? order by t.id desc", new String[] {String.valueOf(budgetId)});
+        String sql = "select t.id, t.date, t.value, t.budgetId, t.itemId, t.description, i.name " +
+                "from transactions as t left join items as i on t.itemId = i.id ";
+        Cursor cursor;
+        if (budgetId > 0) {
+            sql += "where t.budgetId = ? order by t.id desc";
+            cursor = db.rawQuery(sql, new String[] {String.valueOf(budgetId)});
+        }
+        else {
+            sql += " order by t.id";
+            cursor = db.rawQuery(sql, null);
+        }
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             Transaction transaction = new Transaction(cursor.getInt(0), cursor.getLong(1),
@@ -144,5 +157,30 @@ public class DBHelper extends SQLiteOpenHelper {
     public void removeTransaction(long id){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete("transactions", "id=?", new String[] {String.valueOf(id)});
+    }
+
+    public void export() {
+        String file_name = "fbm.csv";
+        File root = Environment.getExternalStorageDirectory();
+        File exportDir = new File(root.getAbsolutePath() + File.separator + "fbm/");
+        try {
+            if (!exportDir.exists())
+                if (!exportDir.mkdirs())
+                    throw new IOException("Error creating export dir");
+            File exportFile = new File(exportDir, "transactions.csv");
+            exportFile.createNewFile();
+            FileWriter fileWriter = new FileWriter(exportFile);
+            BufferedWriter out = new BufferedWriter(fileWriter);
+            String csvHeader = "id,date,value,budget,item,description";
+            String csvValues = "";
+            ArrayList<Transaction> transactions = this.getTransactions(0);
+            for (Transaction transaction : transactions) {
+                out.write(transaction.toString());
+            }
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
