@@ -63,7 +63,7 @@ public class BudgetAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent singleBudgetIntent = new Intent(context, SingleBudgetActivity.class);
-                singleBudgetIntent.putExtra("id", position);
+                singleBudgetIntent.putExtra("id", budgets.get(position).getId());
                 context.startActivity(singleBudgetIntent);
             }
         });

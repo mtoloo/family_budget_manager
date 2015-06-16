@@ -21,4 +21,8 @@ public class Budget {
     public String getIcon() {
         return icon;
     }
+
+    public int getId() {
+        return id;
+    }
 }

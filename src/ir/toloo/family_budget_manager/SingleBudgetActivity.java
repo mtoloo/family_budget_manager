@@ -75,6 +75,10 @@ public class SingleBudgetActivity extends Activity{
                 singleBudget.itemText.setText(transaction.itemName);
                 singleBudget.priceText.setText(String.valueOf(transaction.value));
                 singleBudget.descriptionText.setText(String.valueOf(transaction.description));
+                SimpleDateFormat dateFormat = new SimpleDateFormat(
+                        DATE_STRING_FORMAT, Locale.getDefault());
+                String formatted_date = dateFormat.format(transaction.date);
+                singleBudget.dateText.setText(formatted_date);
             }
         });
         transactionListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

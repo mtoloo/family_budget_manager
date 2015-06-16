@@ -59,21 +59,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 "(5, 'زهرا', 'woman.png', 100)");
         db.execSQL("insert into budgets(id, name, icon, value) values " +
                 "(6, 'علیرضا', 'child.png', 100)");
-
-//        db.execSQL("Insert into transactions(id, date, value, budgetId, itemId, description) " +
-//                "values (1, '2015-01-01', 22, 6, 5, 'پوشک')");
-//        db.execSQL("Insert into transactions(id, date, value, budgetId, itemId, description) " +
-//                "values (2, '2015-01-02', 22, 6, 6, 'شیشه')");
-//        db.execSQL("Insert into transactions(id, date, value, budgetId, itemId, description) " +
-//                "values (3, '2015-02-02', 22, 5, 4, 'کفش')");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists budgets");
-        db.execSQL("drop table if exists items");
-        db.execSQL("drop table if exists transactions");
-        onCreate(db);
     }
 
     public ArrayList<Budget> getAllBudgets() {

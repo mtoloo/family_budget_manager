@@ -1,12 +1,9 @@
 package ir.toloo.family_budget_manager;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 
 public class BudgetsActivity extends Activity {
@@ -23,15 +20,8 @@ public class BudgetsActivity extends Activity {
         this.db = new DBHelper(this);
 
         GridView gridView = (GridView) findViewById(R.id.gridView);
-        gridView.setAdapter(new BudgetAdapter(this, db));
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent singleBudgetIntent = new Intent(getApplicationContext(), SingleBudgetActivity.class);
-                singleBudgetIntent.putExtra("id", position);
-                startActivity(singleBudgetIntent);
-            }
-        });
+        final BudgetAdapter budgetAdapter = new BudgetAdapter(this, db);
+        gridView.setAdapter(budgetAdapter);
     }
 
     @Override

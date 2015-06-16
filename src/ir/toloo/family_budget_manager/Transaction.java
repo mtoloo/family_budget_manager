@@ -11,7 +11,7 @@ import android.text.format.DateUtils;
  */
 public class Transaction {
     private final long id;
-    private final long date;
+    public final long date;
     public final float value;
     private final int budgetId;
     private final int itemId;
