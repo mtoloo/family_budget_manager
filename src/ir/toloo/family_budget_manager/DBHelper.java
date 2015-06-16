@@ -11,7 +11,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DBName = "budget_acc";
+    public static final String DATE_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public DBHelper(Context context) {
         super(context, DBName, null, 10);
@@ -148,28 +152,31 @@ public class DBHelper extends SQLiteOpenHelper {
         db.delete("transactions", "id=?", new String[] {String.valueOf(id)});
     }
 
-    public void export() {
-        String file_name = "fbm.csv";
+    public String export() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd", Locale.getDefault());
+        String fileName = dateFormat.format(new Date()) + ".csv";
         File root = Environment.getExternalStorageDirectory();
         File exportDir = new File(root.getAbsolutePath() + File.separator + "fbm/");
         try {
             if (!exportDir.exists())
                 if (!exportDir.mkdirs())
                     throw new IOException("Error creating export dir");
-            File exportFile = new File(exportDir, "transactions.csv");
+            File exportFile = new File(exportDir, fileName);
             exportFile.createNewFile();
             FileWriter fileWriter = new FileWriter(exportFile);
             BufferedWriter out = new BufferedWriter(fileWriter);
-            String csvHeader = "id,date,value,budget,item,description";
+            out.write("id,date,value,budget,item,description\n");
             String csvValues = "";
             ArrayList<Transaction> transactions = this.getTransactions(0);
             for (Transaction transaction : transactions) {
-                out.write(transaction.toString());
+                out.write(transaction.toCSV());
+                out.write("\n");
             }
             out.close();
+            return exportFile.getAbsolutePath();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return "Failed!!";
     }
 }

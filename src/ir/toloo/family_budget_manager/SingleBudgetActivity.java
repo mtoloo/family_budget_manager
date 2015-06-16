@@ -20,7 +20,6 @@ import java.util.Locale;
  * To change this template use File | Settings | File Templates.
  */
 public class SingleBudgetActivity extends Activity{
-    public static final String DATE_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private DBHelper db;
     private int budgetId;
     private EditText dateText;
@@ -39,7 +38,7 @@ public class SingleBudgetActivity extends Activity{
         idText = (EditText) findViewById(R.id.singleBudgetIdText);
         dateText = (EditText) findViewById(R.id.singleBudgetDateText);
         SimpleDateFormat dateFormat = new SimpleDateFormat(
-                DATE_STRING_FORMAT, Locale.getDefault());
+                DBHelper.DATE_STRING_FORMAT, Locale.getDefault());
         String formatted_date = dateFormat.format(new Date());
         dateText.setText(formatted_date);
         showTransactions(budgetId);
@@ -76,7 +75,7 @@ public class SingleBudgetActivity extends Activity{
                 singleBudget.priceText.setText(String.valueOf(transaction.value));
                 singleBudget.descriptionText.setText(String.valueOf(transaction.description));
                 SimpleDateFormat dateFormat = new SimpleDateFormat(
-                        DATE_STRING_FORMAT, Locale.getDefault());
+                        DBHelper.DATE_STRING_FORMAT, Locale.getDefault());
                 String formatted_date = dateFormat.format(transaction.date);
                 singleBudget.dateText.setText(formatted_date);
             }
@@ -96,7 +95,7 @@ public class SingleBudgetActivity extends Activity{
         String dateStr = dateText.getText().toString();
         long date_milis;
         try {
-            Date date = new SimpleDateFormat(DATE_STRING_FORMAT, Locale.ENGLISH).parse(dateStr);
+            Date date = new SimpleDateFormat(DBHelper.DATE_STRING_FORMAT, Locale.ENGLISH).parse(dateStr);
             date_milis = date.getTime();
         } catch (ParseException e) {
             e.printStackTrace();

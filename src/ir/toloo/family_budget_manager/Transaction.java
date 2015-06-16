@@ -2,6 +2,9 @@ package ir.toloo.family_budget_manager;
 
 import android.text.format.DateUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 /**
  * Created with IntelliJ IDEA.
  * User: mtoloo
@@ -45,5 +48,15 @@ public class Transaction {
 
     public int getBudgetId() {
         return budgetId;
+    }
+
+    public String toCSV() {
+        // id,date,value,budget,item,description
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                DBHelper.DATE_STRING_FORMAT, Locale.getDefault());
+        String formatted_date = dateFormat.format(date);
+        String budgetName = String.valueOf(budgetId);
+        String result = String.format("%d,%s,%f,%s,%s,%s", id, formatted_date, value, budgetName, itemName, description);
+        return result;
     }
 }

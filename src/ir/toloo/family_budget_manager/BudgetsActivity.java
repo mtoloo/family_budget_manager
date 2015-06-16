@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridView;
+import android.widget.Toast;
 
 public class BudgetsActivity extends Activity {
     private DBHelper db;
@@ -42,6 +43,7 @@ public class BudgetsActivity extends Activity {
     }
 
     private void export_database() {
-        db.export();
+        String fileName = db.export();
+        Toast.makeText(this, "Saved to " + fileName, Toast.LENGTH_LONG).show();
     }
 }
