@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import ir.toloo.family_budget_manager.models.Budget;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -78,6 +79,7 @@ public class BudgetAdapter extends BaseAdapter {
         resourceMap.put("consumable.png", R.drawable.consumable);
         resourceMap.put("child.png", R.drawable.child);
         resourceMap.put("home.png", R.drawable.home);
+        resourceMap.put("angel.png", R.drawable.angel);
         Integer result = resourceMap.get(budgetIcon);
         if (result == null)
             result = R.drawable.save;

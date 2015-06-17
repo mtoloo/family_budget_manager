@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
+import ir.toloo.family_budget_manager.models.Budget;
+import ir.toloo.family_budget_manager.models.Transaction;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -77,15 +79,39 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<Budget> getAllBudgets() {
         ArrayList<Budget> budgets = new ArrayList<Budget>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select id, name, icon from budgets", null);
+        Cursor res = db.rawQuery("select b.id, b.name, b.icon, sum(case when t.value > 0 then t.value else 0 end), " +
+                "sum(case when t.value < 0 then t.value else 0 end) from budgets b left join transactions t " +
+                "on t.budgetId = b.id group by b.id, b.name, b.icon", null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
-            Budget budget = new Budget(res.getInt(0), res.getString(1), res.getString(2));
+            Budget budget = new Budget(res.getInt(0), res.getString(1), res.getString(2), res.getFloat(3), res.getFloat(4));
             budgets.add(budget);
             res.moveToNext();
         }
         return budgets;
+    }
+
+    public float getBudgetIncome(int budgetId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "select sum(case when value > 0 then value else 0 end) from transactions where budgetId = ?";
+        Cursor res = db.rawQuery(sql, new String[] {String.valueOf(budgetId)});
+        res.moveToFirst();
+
+        if (!res.isAfterLast())
+            return res.getInt(0);
+        return 0;
+    }
+
+    public float getBudgetExpense(int budgetId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "select sum(case when value < 0 then value else 0 end) from transactions where budgetId = ?";
+        Cursor res = db.rawQuery(sql, new String[] {String.valueOf(budgetId)});
+        res.moveToFirst();
+
+        if (!res.isAfterLast())
+            return res.getInt(0);
+        return 0;
     }
 
     public ArrayList<Transaction> getTransactions(int budgetId) {

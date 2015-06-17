@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
+import ir.toloo.family_budget_manager.models.Transaction;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,6 +58,11 @@ public class SingleBudgetActivity extends Activity{
 
         priceText = (TextView) findViewById(R.id.singleBudgetPriceText);
         descriptionText = (TextView) findViewById(R.id.singleBudgetDescriptionText);
+
+        TextView incomeText = (TextView) findViewById(R.id.singleBudgetIncomeTextView);
+        incomeText.setText(String.valueOf(db.getBudgetIncome(budgetId)));
+        TextView expenseText = (TextView) findViewById(R.id.singleBudgetExpenseTextView);
+        expenseText.setText(String.valueOf(db.getBudgetExpense(budgetId)));
     }
 
     private void showTransactions(final int budgetId) {

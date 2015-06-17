@@ -1,4 +1,4 @@
-package ir.toloo.family_budget_manager;
+package ir.toloo.family_budget_manager.models;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,11 +11,15 @@ public class Budget {
     private final int id;
     private final String name;
     private final String icon;
+    private final float income;
+    private final float expense;
 
-    public Budget(int id, String name, String icon) {
+    public Budget(int id, String name, String icon, float income, float expense) {
         this.id = id;
         this.name = name;
         this.icon = icon;
+        this.income = income;
+        this.expense = expense;
     }
 
     public String getIcon() {
