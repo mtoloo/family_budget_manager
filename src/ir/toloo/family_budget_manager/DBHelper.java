@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DATE_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public DBHelper(Context context) {
-        super(context, DBName, null, 10);
+        super(context, DBName, null, 12);
     }
 
     @Override
@@ -67,6 +67,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion == 11) {
+            db.execSQL("insert into budgets(id, name, icon, value) values " +
+                    "(7, 'صدقه', 'angel.png', 100)");
+            db.execSQL("update transactions set value = -value");
+        }
     }
 
     public ArrayList<Budget> getAllBudgets() {

@@ -108,7 +108,7 @@ public class SingleBudgetActivity extends Activity{
         this.db.saveTransaction(
                 id,
                 date_milis,
-                Float.parseFloat(priceText.getText().toString()),
+                Float.parseFloat(priceText.getText().toString()) * -1,
                 budgetId, itemText.getText().toString(),
                 descriptionText.getText().toString());
 
