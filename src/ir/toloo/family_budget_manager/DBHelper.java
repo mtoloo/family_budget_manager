@@ -111,7 +111,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "from transactions as t left join items as i on t.itemId = i.id ";
         Cursor cursor;
         if (budgetId > 0) {
-            sql += "where t.budgetId = ? order by t.id desc";
+            sql += "where t.budgetId = ? order by t.date desc";
             cursor = db.rawQuery(sql, new String[] {String.valueOf(budgetId)});
         }
         else {

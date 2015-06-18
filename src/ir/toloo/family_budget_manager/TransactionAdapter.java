@@ -52,6 +52,11 @@ public class TransactionAdapter extends BaseAdapter {
 
         TextView valueText = (TextView) vi.findViewById(R.id.transactionValue);
         valueText.setText(String.valueOf(transaction.value));
+
+        if (transaction.value > 0)
+            vi.setBackgroundColor(vi.getResources().getColor(R.color.Income));
+        else
+            vi.setBackgroundColor(vi.getResources().getColor(R.color.Expense));
         return vi;
     }
 }
