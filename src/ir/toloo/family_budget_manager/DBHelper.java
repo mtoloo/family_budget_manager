@@ -92,26 +92,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return budgets;
     }
 
-    public float getBudgetIncome(int budgetId) {
+    public BudgetValues getBudgetValues(int budgetId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "select sum(case when value > 0 then value else 0 end) from transactions where budgetId = ?";
+        String sql = "select sum(case when value > 0 then value else 0 end), " +
+                "sum(case when value < 0 then value else 0 end) from transactions where budgetId = ?";
         Cursor res = db.rawQuery(sql, new String[] {String.valueOf(budgetId)});
         res.moveToFirst();
 
         if (!res.isAfterLast())
-            return res.getInt(0);
-        return 0;
-    }
-
-    public float getBudgetExpense(int budgetId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "select sum(case when value < 0 then value else 0 end) from transactions where budgetId = ?";
-        Cursor res = db.rawQuery(sql, new String[] {String.valueOf(budgetId)});
-        res.moveToFirst();
-
-        if (!res.isAfterLast())
-            return res.getInt(0);
-        return 0;
+            return new BudgetValues(res.getFloat(0), -1 * res.getFloat(1));
+        return new BudgetValues(0, 0);
     }
 
     public ArrayList<Transaction> getTransactions(int budgetId) {

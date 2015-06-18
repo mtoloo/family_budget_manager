@@ -59,10 +59,13 @@ public class SingleBudgetActivity extends Activity{
         priceText = (TextView) findViewById(R.id.singleBudgetPriceText);
         descriptionText = (TextView) findViewById(R.id.singleBudgetDescriptionText);
 
+        BudgetValues budgetValues = db.getBudgetValues(budgetId);
         TextView incomeText = (TextView) findViewById(R.id.singleBudgetIncomeTextView);
-        incomeText.setText(String.valueOf(db.getBudgetIncome(budgetId)));
+        incomeText.setText(String.valueOf(budgetValues.income));
         TextView expenseText = (TextView) findViewById(R.id.singleBudgetExpenseTextView);
-        expenseText.setText(String.valueOf(db.getBudgetExpense(budgetId)));
+        expenseText.setText(String.valueOf(budgetValues.expense));
+        TextView remainText = (TextView) findViewById(R.id.singleBudgetRemainTextView);
+        remainText.setText(String.valueOf(budgetValues.remain));
     }
 
     private void showTransactions(final int budgetId) {
