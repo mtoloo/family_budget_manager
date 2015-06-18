@@ -70,7 +70,7 @@ public class SingleBudgetActivity extends Activity{
 
     private void showTransactions(final int budgetId) {
         final ArrayList<Transaction> transactions = this.db.getTransactions(budgetId);
-        ArrayAdapter<Transaction> transactionArrayAdapter = new ArrayAdapter<Transaction>(this, android.R.layout.simple_list_item_1, transactions);
+        TransactionAdapter transactionArrayAdapter = new TransactionAdapter(this, transactions);
         ListView transactionListView = (ListView) findViewById(R.id.singleBudgetTransactions);
         transactionListView.setAdapter(transactionArrayAdapter);
         final SingleBudgetActivity singleBudget = this;
