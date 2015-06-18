@@ -10,8 +10,6 @@ import android.widget.TextView;
 import ir.toloo.family_budget_manager.models.Transaction;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,10 +20,8 @@ import java.util.Map;
  */
 public class TransactionAdapter extends BaseAdapter {
     private final ArrayList<Transaction> transactions;
-    private Context mContext;
     private LayoutInflater layoutInflater;
     public TransactionAdapter(Context c, ArrayList<Transaction> transactions) {
-        this.mContext = c;
         this.layoutInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.transactions = transactions;
     }
@@ -42,7 +38,6 @@ public class TransactionAdapter extends BaseAdapter {
         return this.transactions.get(position).getId();
     }
 
-    // create a new ImageView for each item referenced by the Adapter
     public View getView(final int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         Transaction transaction = this.transactions.get(position);
@@ -58,20 +53,5 @@ public class TransactionAdapter extends BaseAdapter {
         TextView valueText = (TextView) vi.findViewById(R.id.transactionValue);
         valueText.setText(String.valueOf(transaction.value));
         return vi;
-    }
-
-    private int getBudgetResourceId(String budgetIcon) {
-        Map<String, Integer> resourceMap = new Hashtable<String, Integer>();
-        resourceMap.put("car.png", R.drawable.car);
-        resourceMap.put("man.png", R.drawable.man);
-        resourceMap.put("woman.png", R.drawable.woman);
-        resourceMap.put("consumable.png", R.drawable.consumable);
-        resourceMap.put("child.png", R.drawable.child);
-        resourceMap.put("home.png", R.drawable.home);
-        resourceMap.put("angel.png", R.drawable.angel);
-        Integer result = resourceMap.get(budgetIcon);
-        if (result == null)
-            result = R.drawable.save;
-        return result;
     }
 }
