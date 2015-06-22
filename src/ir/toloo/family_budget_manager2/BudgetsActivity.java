@@ -1,4 +1,4 @@
-package ir.toloo.family_budget_manager;
+package ir.toloo.family_budget_manager2;
 
 import android.app.Activity;
 import android.os.Bundle;

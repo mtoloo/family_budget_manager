@@ -1,7 +1,7 @@
-package ir.toloo.family_budget_manager.models;
+package ir.toloo.family_budget_manager2.models;
 
 import android.text.format.DateUtils;
-import ir.toloo.family_budget_manager.DBHelper;
+import ir.toloo.family_budget_manager2.DBHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;

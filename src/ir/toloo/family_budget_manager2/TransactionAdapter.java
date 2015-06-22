@@ -1,4 +1,4 @@
-package ir.toloo.family_budget_manager;
+package ir.toloo.family_budget_manager2;
 
 import android.content.Context;
 import android.text.format.DateUtils;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import ir.toloo.family_budget_manager.models.Transaction;
+import ir.toloo.family_budget_manager2.models.Transaction;
 
 import java.util.ArrayList;
 

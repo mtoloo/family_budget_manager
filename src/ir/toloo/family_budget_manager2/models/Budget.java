@@ -1,4 +1,4 @@
-package ir.toloo.family_budget_manager.models;
+package ir.toloo.family_budget_manager2.models;
 
 /**
  * Created with IntelliJ IDEA.

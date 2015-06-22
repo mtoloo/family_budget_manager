@@ -1,4 +1,4 @@
-package ir.toloo.family_budget_manager;
+package ir.toloo.family_budget_manager2;
 
 /**
  * Created by toloo on 6/18/15.

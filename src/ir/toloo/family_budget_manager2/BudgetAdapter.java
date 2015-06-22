@@ -1,4 +1,4 @@
-package ir.toloo.family_budget_manager;
+package ir.toloo.family_budget_manager2;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import ir.toloo.family_budget_manager.models.Budget;
+import ir.toloo.family_budget_manager2.models.Budget;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
