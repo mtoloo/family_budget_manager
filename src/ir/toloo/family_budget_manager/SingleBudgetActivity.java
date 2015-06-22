@@ -1,11 +1,11 @@
-package ir.toloo.family_budget_manager2;
+package ir.toloo.family_budget_manager;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
-import ir.toloo.family_budget_manager2.models.Transaction;
+import ir.toloo.family_budget_manager.models.Transaction;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
