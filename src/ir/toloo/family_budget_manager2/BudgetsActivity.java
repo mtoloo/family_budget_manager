@@ -7,6 +7,8 @@ import android.view.MenuItem;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 public class BudgetsActivity extends Activity {
     private DBHelper db;
 
@@ -37,6 +39,9 @@ public class BudgetsActivity extends Activity {
             case R.id.export_db:
                 export_database();
                 return true;
+            case R.id.import_db:
+                import_database();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -45,5 +50,17 @@ public class BudgetsActivity extends Activity {
     private void export_database() {
         String fileName = db.export();
         Toast.makeText(this, "Saved to " + fileName, Toast.LENGTH_LONG).show();
+    }
+
+    private void import_database() {
+        String fileName = "/storage/sdcard0/fbm/2015_06_22.csv";
+        try {
+            db.import_csv(fileName);
+            Toast.makeText(this, "Imported from " + fileName, Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error importing from " + fileName, Toast.LENGTH_LONG).show();
+        }
+
     }
 }

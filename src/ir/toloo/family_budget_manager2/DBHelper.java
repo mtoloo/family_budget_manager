@@ -9,10 +9,8 @@ import android.os.Environment;
 import ir.toloo.family_budget_manager2.models.Budget;
 import ir.toloo.family_budget_manager2.models.Transaction;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -199,5 +197,40 @@ public class DBHelper extends SQLiteOpenHelper {
             e.printStackTrace();
         }
         return "Failed!!";
+    }
+
+    public void import_csv(String fileName) throws IOException {
+        FileReader fileReader = new FileReader(fileName);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        db.beginTransaction();
+        String line = bufferedReader.readLine();
+        String[] columns = line.split(",");
+        while ((line = bufferedReader.readLine()) != null) {
+            String data[] = line.split(",");
+            Integer id = 0;
+            if (!data[0].equals(""))
+                id = Integer.valueOf(data[0]);
+
+            long date_milis;
+            try {
+                Date date = new SimpleDateFormat(DBHelper.DATE_STRING_FORMAT, Locale.ENGLISH).parse(data[1]);
+                date_milis = date.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+                date_milis = System.currentTimeMillis();
+            }
+            Float price = Float.parseFloat(data[2]);
+            Integer budgetId = Integer.parseInt(data[3]);
+            String item = data[4];
+            String description = "";
+            if (data.length >= 6)
+                description = data[5];
+            long saveResult = this.saveTransaction(id, date_milis, price, budgetId, item, description);
+            if (saveResult == 0)
+                saveResult = saveTransaction(0, date_milis, price, budgetId, item, description);
+        }
+//        db.setTransactionSuccessful();
+//        db.endTransaction();
     }
 }
