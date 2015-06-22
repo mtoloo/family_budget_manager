@@ -21,7 +21,6 @@ public class BudgetsActivity extends Activity {
         setContentView(R.layout.main);
 
         this.db = new DBHelper(this);
-
         GridView gridView = (GridView) findViewById(R.id.gridView);
         final BudgetAdapter budgetAdapter = new BudgetAdapter(this, db);
         gridView.setAdapter(budgetAdapter);
