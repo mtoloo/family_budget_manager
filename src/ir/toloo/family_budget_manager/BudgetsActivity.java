@@ -1,6 +1,7 @@
 package ir.toloo.family_budget_manager;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,23 +37,31 @@ public class BudgetsActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.export_db:
-                export_database();
+                exportDatabase();
                 return true;
             case R.id.import_db:
-                import_database();
+                importDatabase();
+                return true;
+            case R.id.earn:
+                showEarnActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void export_database() {
+    private void showEarnActivity() {
+        Intent earnActivityIntent = new Intent(this, EarnActivity.class);
+        this.startActivity(earnActivityIntent);
+    }
+
+    private void exportDatabase() {
         String fileName = db.export();
         Toast.makeText(this, "Saved to " + fileName, Toast.LENGTH_LONG).show();
     }
 
-    private void import_database() {
-        String fileName = "/storage/sdcard0/fbm/2015_06_22.csv";
+    private void importDatabase() {
+        String fileName = "/storage/sdcard0/fbm/import.csv";
         try {
             db.import_csv(fileName);
             Toast.makeText(this, "Imported from " + fileName, Toast.LENGTH_LONG).show();

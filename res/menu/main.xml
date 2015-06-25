@@ -2,8 +2,10 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/export_db"
-          android:title="Export database"
+          android:title="خروجی از دیتابیس"
           android:showAsAction="ifRoom"/>
     <item android:id="@+id/import_db"
-          android:title="Import database" />
+          android:title="ورود به دیتابیس" />
+    <item android:id="@+id/earn"
+          android:title="ثبت درآمد" />
 </menu>

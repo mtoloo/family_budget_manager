@@ -16,7 +16,8 @@
             </intent-filter>
         </activity>
         <activity android:name="ir.toloo.family_budget_manager.SingleBudgetActivity">
-
+        </activity>
+        <activity android:name="ir.toloo.family_budget_manager.EarnActivity">
         </activity>
     </application>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>

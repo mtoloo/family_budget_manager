@@ -13,13 +13,17 @@ public class Budget {
     private final String icon;
     private final float income;
     private final float expense;
+    private final Integer value;
+    private Float percent;
 
-    public Budget(int id, String name, String icon, float income, float expense) {
+    public Budget(int id, String name, String icon, float income, float expense, Integer value, Float percent) {
         this.id = id;
         this.name = name;
         this.icon = icon;
         this.income = income;
         this.expense = expense;
+        this.value = value;
+        this.percent = percent;
     }
 
     public String getIcon() {
@@ -28,5 +32,13 @@ public class Budget {
 
     public int getId() {
         return id;
+    }
+
+    public Integer getValue() {
+        return value;
+    }
+
+    public Float getPercent() {
+        return percent;
     }
 }

@@ -78,12 +78,13 @@ public class DBHelper extends SQLiteOpenHelper {
         ArrayList<Budget> budgets = new ArrayList<Budget>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select b.id, b.name, b.icon, sum(case when t.value > 0 then t.value else 0 end), " +
-                "sum(case when t.value < 0 then t.value else 0 end) from budgets b left join transactions t " +
+                "sum(case when t.value < 0 then t.value else 0 end), b.value, b.percent from budgets b left join transactions t " +
                 "on t.budgetId = b.id group by b.id, b.name, b.icon", null);
         res.moveToFirst();
 
         while (!res.isAfterLast()) {
-            Budget budget = new Budget(res.getInt(0), res.getString(1), res.getString(2), res.getFloat(3), res.getFloat(4));
+            Budget budget = new Budget(res.getInt(0), res.getString(1), res.getString(2), res.getFloat(3),
+                    res.getFloat(4), res.getInt(5), res.getFloat(6));
             budgets.add(budget);
             res.moveToNext();
         }
