@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -25,6 +26,14 @@ public class BudgetsActivity extends Activity {
         GridView gridView = (GridView) findViewById(R.id.gridView);
         final BudgetAdapter budgetAdapter = new BudgetAdapter(this, db);
         gridView.setAdapter(budgetAdapter);
+
+        BudgetValues budgetValues = db.getBudgetValues(0);
+        TextView budgetsTotalTextView = (TextView) findViewById(R.id.budgetsTotalTextView);
+        budgetsTotalTextView.setText(String.valueOf(budgetValues.income));
+        TextView budgetsRemainTextView = (TextView) findViewById(R.id.budgetsRemainTextView);
+        budgetsRemainTextView.setText(String.valueOf(budgetValues.remain));
+        TextView budgetsExpenseTextView = (TextView) findViewById(R.id.budgetsExpenseTextView);
+        budgetsExpenseTextView.setText(String.valueOf(budgetValues.expense));
     }
 
     @Override

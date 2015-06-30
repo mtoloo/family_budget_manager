@@ -8,5 +8,17 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/gridView" android:numColumns="2"/>
+
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                    android:background="@android:color/holo_blue_bright">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@+id/budgetsTotalTextView" android:text="Total"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@+id/budgetsRemainTextView" android:text="Remain"
+              android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:layout_alignParentRight="true"
+              android:id="@+id/budgetsExpenseTextView" android:text="Expense"/>
+    </RelativeLayout>
 </LinearLayout>
 

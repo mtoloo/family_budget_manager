@@ -13,7 +13,6 @@ import ir.toloo.family_budget_manager.models.Budget;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,11 +22,22 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class BudgetAdapter extends BaseAdapter {
-    private final ArrayList<Budget> budgets;
+    private ArrayList<Budget> budgets;
+    private Hashtable<String, Integer> resourceMap;
     private Context mContext;
+
     public BudgetAdapter(Context c, DBHelper db) {
         this.mContext = c;
         this.budgets = db.getAllBudgets();
+        this.resourceMap = new Hashtable<String, Integer>();
+        resourceMap.put("car.png", R.drawable.car);
+        resourceMap.put("man.png", R.drawable.man);
+        resourceMap.put("woman.png", R.drawable.woman);
+        resourceMap.put("consumable.png", R.drawable.consumable);
+        resourceMap.put("child.png", R.drawable.child);
+        resourceMap.put("home.png", R.drawable.home);
+        resourceMap.put("angel.png", R.drawable.angel);
+        resourceMap.put("misc.png", R.drawable.misc);
     }
 
     public int getCount() {
@@ -72,14 +82,6 @@ public class BudgetAdapter extends BaseAdapter {
     }
 
     private int getBudgetResourceId(String budgetIcon) {
-        Map<String, Integer> resourceMap = new Hashtable<String, Integer>();
-        resourceMap.put("car.png", R.drawable.car);
-        resourceMap.put("man.png", R.drawable.man);
-        resourceMap.put("woman.png", R.drawable.woman);
-        resourceMap.put("consumable.png", R.drawable.consumable);
-        resourceMap.put("child.png", R.drawable.child);
-        resourceMap.put("home.png", R.drawable.home);
-        resourceMap.put("angel.png", R.drawable.angel);
         Integer result = resourceMap.get(budgetIcon);
         if (result == null)
             result = R.drawable.save;

@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DATE_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public DBHelper(Context context) {
-        super(context, DBName, null, 12);
+        super(context, DBName, null, 14);
     }
 
     @Override
@@ -67,10 +67,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion == 11) {
+        if (oldVersion == 12) {
             db.execSQL("insert into budgets(id, name, icon, value) values " +
                     "(7, 'صدقه', 'angel.png', 100)");
-            db.execSQL("update transactions set value = -value");
+            db.execSQL("update budgets set value = 300 where id = 3");
+        }
+        if (oldVersion == 13) {
+            db.execSQL("insert into budgets(id, name, icon, value) values " +
+                    "(8, 'متفرقه', 'misc.png', 100)");
         }
     }
 
@@ -94,12 +98,19 @@ public class DBHelper extends SQLiteOpenHelper {
     public BudgetValues getBudgetValues(int budgetId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String sql = "select sum(case when value > 0 then value else 0 end), " +
-                "sum(case when value < 0 then value else 0 end) from transactions where budgetId = ?";
-        Cursor res = db.rawQuery(sql, new String[] {String.valueOf(budgetId)});
-        res.moveToFirst();
+                "sum(case when value < 0 then value else 0 end) from transactions";
+        Cursor cursor;
+        if (budgetId > 0) {
+            sql += " where budgetId = ?";
+            cursor = db.rawQuery(sql, new String[] {String.valueOf(budgetId)});
+        }
+        else {
+            cursor = db.rawQuery(sql, null);
+        }
+        cursor.moveToFirst();
 
-        if (!res.isAfterLast())
-            return new BudgetValues(res.getFloat(0), -1 * res.getFloat(1));
+        if (!cursor.isAfterLast())
+            return new BudgetValues(cursor.getFloat(0), -1 * cursor.getFloat(1));
         return new BudgetValues(0, 0);
     }
 
