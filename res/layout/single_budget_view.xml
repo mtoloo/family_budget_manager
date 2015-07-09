@@ -98,6 +98,21 @@
                 android:layout_width="60dp"
                 android:onClick="save"
                 android:text="Save"/>
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentLeft="true"
+                  android:layout_marginTop="165dp"
+                  android:id="@+id/singleBudgetSourceLabel"
+                  android:text="Source"/>
+        <AutoCompleteTextView
+            android:id="@+id/singleBudgetSourceText"
+            android:layout_alignLeft="@+id/singleBudgetSourceLabel"
+            android:layout_marginTop="150dp"
+            android:layout_marginLeft="35dp"
+            android:layout_height="wrap_content"
+            android:layout_width="140dp"/>
+
     </RelativeLayout>
     <ListView android:id="@+id/listView" android:layout_width="match_parent"
               android:layout_height="wrap_content"

@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DATE_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public DBHelper(Context context) {
-        super(context, DBName, null, 14);
+        super(context, DBName, null, 16);
     }
 
     @Override
@@ -43,12 +43,16 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("Create table items " +
                 "(id integer primary key," +
                 "name text)");
+        db.execSQL("Create table sources " +
+                "(id integer primary key," +
+                "icon text, name text)");
         db.execSQL("Create table transactions " +
                 "(id integer primary key," +
                 "date long," +
                 "value float," +
                 "budgetId integer," +
                 "itemId integer," +
+                "sourceId integer," +
                 "description text)");
 
         db.execSQL("insert into budgets(id, name, icon, value) values " +
@@ -75,6 +79,21 @@ public class DBHelper extends SQLiteOpenHelper {
         if (oldVersion == 13) {
             db.execSQL("insert into budgets(id, name, icon, value) values " +
                     "(8, 'متفرقه', 'misc.png', 100)");
+        }
+        if (oldVersion == 14) {
+            db.execSQL("Create table sources " +
+                    "(id integer primary key," +
+                    "icon text, name text)");
+            db.execSQL("alter table transactions add column source_id int");
+            db.execSQL("insert into sources (id, icon, name) values (1, 'novin.png', 'نوین')");
+            db.execSQL("insert into sources (id, icon, name) values (2, 'mellat.png', 'ملت')");
+            db.execSQL("insert into sources (id, icon, name) values (3, 'parsian.png', 'پارسیان')");
+            db.execSQL("insert into sources (id, icon, name) values (4, 'man.png', 'مرتضی')");
+            db.execSQL("insert into sources (id, icon, name) values (5, 'woman.png', 'زهرا')");
+        }
+        if (oldVersion == 15) {
+//            db.execSQL("alter table transactions remove column source_id ");
+            db.execSQL("alter table transactions add column sourceId int");
         }
     }
 
@@ -117,11 +136,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<Transaction> getTransactions(int budgetId) {
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "select t.id, t.date, t.value, t.budgetId, t.itemId, t.description, i.name " +
-                "from transactions as t left join items as i on t.itemId = i.id ";
+        String sql = "select t.id, t.date, t.value, t.budgetId, t.itemId, i.name, s.name, t.description " +
+                " from transactions as t " +
+                " left join items as i on t.itemId = i.id " +
+                " left join sources as s on t.sourceId = s.id ";
         Cursor cursor;
         if (budgetId > 0) {
-            sql += "where t.budgetId = ? order by t.date desc";
+            sql += " where t.budgetId = ? order by t.date desc";
             cursor = db.rawQuery(sql, new String[] {String.valueOf(budgetId)});
         }
         else {
@@ -131,21 +152,24 @@ public class DBHelper extends SQLiteOpenHelper {
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             Transaction transaction = new Transaction(cursor.getInt(0), cursor.getLong(1),
-                    cursor.getFloat(2), cursor.getInt(3), cursor.getInt(4), cursor.getString(6),
-                    cursor.getString(5));
+                    cursor.getFloat(2), cursor.getInt(3), cursor.getInt(4), cursor.getString(5),
+                    cursor.getString(6), cursor.getString(7));
             transactions.add(transaction);
         }
         return transactions;
     }
 
-    public long saveTransaction(long id, long date, float price, Integer budgetId, String item, String description) {
+    public long saveTransaction(long id, long date, float price, Integer budgetId, String item, String source,
+                                String description) {
         SQLiteDatabase db = this.getWritableDatabase();
         long itemId = this.getItemId(db, item);
+        long sourceId = this.getSourceId(db, source);
         ContentValues transactionValues = new ContentValues();
         transactionValues.put("date", date);
         transactionValues.put("value", price);
         transactionValues.put("budgetId", budgetId);
         transactionValues.put("itemId", itemId);
+        transactionValues.put("sourceId", sourceId);
         transactionValues.put("description", description);
         long result;
         if (id > 0)
@@ -166,10 +190,35 @@ public class DBHelper extends SQLiteOpenHelper {
         return itemCursor.getLong(0);
     }
 
+    private long getSourceId(SQLiteDatabase db, String name) {
+        Cursor itemCursor = db.rawQuery("select id from sources where name like ?", new String[] {name});
+        if (itemCursor.isAfterLast()) {
+            ContentValues itemValues = new ContentValues();
+            itemValues.put("name", name);
+            if (name.equals(""))
+                itemValues.put("id", 0);
+            return db.insert("sources", null, itemValues);
+        }
+        itemCursor.moveToFirst();
+        return itemCursor.getLong(0);
+    }
+
     public ArrayList<String> getItems(int budgetId) {
         ArrayList<String> items = new ArrayList<String>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select name from items", null);
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            items.add(cursor.getString(0));
+            cursor.moveToNext();
+        }
+        return items;
+    }
+
+    public ArrayList<String> getSources(int budgetId) {
+        ArrayList<String> items = new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select name from sources", null);
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             items.add(cursor.getString(0));
@@ -235,12 +284,13 @@ public class DBHelper extends SQLiteOpenHelper {
             Float price = Float.parseFloat(data[2]);
             Integer budgetId = Integer.parseInt(data[3]);
             String item = data[4];
+            String source = data[5];
             String description = "";
-            if (data.length >= 6)
-                description = data[5];
-            long saveResult = this.saveTransaction(id, date_milis, price, budgetId, item, description);
+            if (data.length >= 7)
+                description = data[6];
+            long saveResult = this.saveTransaction(id, date_milis, price, budgetId, item, source, description);
             if (saveResult == 0)
-                saveResult = saveTransaction(0, date_milis, price, budgetId, item, description);
+                saveResult = saveTransaction(0, date_milis, price, budgetId, item, source, description);
         }
 //        db.setTransactionSuccessful();
 //        db.endTransaction();

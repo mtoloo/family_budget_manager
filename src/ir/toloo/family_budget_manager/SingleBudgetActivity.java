@@ -28,6 +28,7 @@ public class SingleBudgetActivity extends Activity{
     private TextView priceText;
     private TextView descriptionText;
     private EditText idText;
+    private AutoCompleteTextView sourceText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,19 @@ public class SingleBudgetActivity extends Activity{
             }
         });
 
+        ArrayList<String> sourcesArrayList = db.getSources(budgetId);
+        ArrayAdapter<String> sourcesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,
+                sourcesArrayList);
+        sourceText = (AutoCompleteTextView) findViewById(R.id.singleBudgetSourceText);
+        itemText.setAdapter(sourcesAdapter);
+        itemText.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                sourceText.showDropDown();
+            }
+        });
+
         priceText = (TextView) findViewById(R.id.singleBudgetPriceText);
         descriptionText = (TextView) findViewById(R.id.singleBudgetDescriptionText);
 
@@ -81,7 +95,8 @@ public class SingleBudgetActivity extends Activity{
                 singleBudget.idText.setText(String.valueOf(transaction.getId()));
                 singleBudget.budgetId = transaction.getBudgetId();
                 singleBudget.itemText.setText(transaction.itemName);
-                singleBudget.priceText.setText(String.valueOf(transaction.value));
+                singleBudget.sourceText.setText(transaction.sourceName);
+                singleBudget.priceText.setText(String.valueOf(transaction.value * -1));
                 singleBudget.descriptionText.setText(String.valueOf(transaction.description));
                 SimpleDateFormat dateFormat = new SimpleDateFormat(
                         DBHelper.DATE_STRING_FORMAT, Locale.getDefault());
@@ -94,7 +109,8 @@ public class SingleBudgetActivity extends Activity{
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Transaction transaction = transactions.get(position);
                 db.removeTransaction(transaction.getId());
-                showTransactions(budgetId);
+                Toast.makeText(singleBudget, "Transaction removed", Toast.LENGTH_LONG).show();
+//                showTransactions(budgetId);
                 return false;
             }
         });
@@ -119,8 +135,10 @@ public class SingleBudgetActivity extends Activity{
                 date_milis,
                 Float.parseFloat(priceText.getText().toString()) * -1,
                 budgetId, itemText.getText().toString(),
+                sourceText.getText().toString(),
                 descriptionText.getText().toString());
 
-        this.showTransactions(budgetId);
+        if (id == 0)
+            this.showTransactions(budgetId);
     }
 }

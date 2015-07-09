@@ -21,14 +21,17 @@ public class Transaction {
     private final int itemId;
     public final String itemName;
     public final String description;
+    public final String sourceName;
 
-    public Transaction(long id, long date, float value, int budgetId, int itemId, String itemName, String description) {
+    public Transaction(long id, long date, float value, int budgetId, int itemId, String itemName, String sourceName,
+                       String description) {
         this.id = id;
         this.date = date;
         this.value = value;
         this.budgetId = budgetId;
         this.itemId = itemId;
         this.itemName = itemName;
+        this.sourceName = sourceName;
         this.description = description;
     }
 
